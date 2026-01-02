@@ -1,7 +1,7 @@
 # Project Task Management Rules
 
 ## 0. System Metadata
-- **Current Max ID**: `Next ID No: 13` (※タスク追加時にインクリメント必須)
+- **Current Max ID**: `Next ID No: 14` (※タスク追加時にインクリメント必須)
 - **ID Source of Truth**: このファイルの `Next ID No` 行が、全プロジェクトにおける唯一のID発番元である。
 
 ## 1. Task Lifecycle (State Machine)
@@ -185,7 +185,6 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 ---
 
 ## Backlog
-
 
 ---
 
