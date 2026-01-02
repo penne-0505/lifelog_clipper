@@ -1,7 +1,7 @@
 # Project Task Management Rules
 
 ## 0. System Metadata
-- **Current Max ID**: `Next ID No: 12` (※タスク追加時にインクリメント必須)
+- **Current Max ID**: `Next ID No: 13` (※タスク追加時にインクリメント必須)
 - **ID Source of Truth**: このファイルの `Next ID No` 行が、全プロジェクトにおける唯一のID発番元である。
 
 ## 1. Task Lifecycle (State Machine)
@@ -185,18 +185,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 ---
 
 ## Backlog
-- **Title**: [Refactor] Split core logic into responsibility-based modules
-- **ID**: Core-Refactor-9
-- **Priority**: P1
-- **Size**: M
-- **Area**: Core
-- **Dependencies**: []
-- **Goal**: UI/状態管理/Health Connect制御/データ集計/モデルが役割ごとに分割され、`lib/main.dart` がエントリとルート構成に専念している。
-- **Steps**:
-  1. [ ] Planの "Tasks" に従ってファイル分割を実施
-  2. [ ] Planの "Test Plan" に従って動作確認
-- **Description**: 現状の単一ファイル構成を整理し、拡張性と保守性を高める。
-- **Plan**: `_docs/plan/Core/refactor-file-split/plan.md`
+
 
 ---
 
@@ -205,33 +194,3 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 ---
 
 ## In Progress
-- **Title**: [Doc] Add directory structure standard
-- **ID**: Docs-Doc-10
-- **Priority**: P2
-- **Size**: XS
-- **Area**: Docs
-- **Dependencies**: []
-- **Goal**: `_docs/standards/project_structure.md` にfeature-firstのディレクトリ構成方針が記載されている。
-- **Steps**:
-  1. [ ] `_docs/standards/project_structure.md` を作成
-  2. [ ] feature-first構成、主要ディレクトリの責務、命名ルールを記述
-- **Description**: ディレクトリ構成ルールを明文化し、今後の分割方針を統一する。
-- **Plan**: None
-
-- **Title**: [Enhance] Use top banner for copy notifications
-- **ID**: UI-Enhance-11
-- **Priority**: P2
-- **Size**: S
-- **Area**: UI
-- **Dependencies**: []
-- **Goal**: コピー完了・失敗時に上部バナー形式の通知が表示され、コピー対象の指標をトグルで切り替えられる。
-- **Steps**:
-  1. [ ] `_docs/archives/plan/Core/lifelog-clipper-mvp/ui-clipboard-flow.md` と `_docs/archives/plan/Core/lifelog-clipper-mvp/data-aggregation-json.md` を確認し、現行の指標・項目を整理する
-  2. [ ] `lib/features/health_connect/presentation/health_connect_gate_page.dart` の通知表示を更新する
-  3. [ ] 画面上部に表示されることを確認する
-  4. [ ] `_docs/standards/animation_standard.md` にアニメーションのメモを残す
-  5. [ ] コピー対象の指標トグルUIを追加する（現行項目をそのまま使用）
-  6. [ ] 選択された指標のみをJSONに含めるよう出力処理を更新する
-  7. [ ] コピー結果とUIの反映を確認する
-- **Description**: 下部スナックバーではなく、上部に表示される通知コンポーネントへ変更し、コピー対象の指標を切り替えられるようにする。
-- **Plan**: None
