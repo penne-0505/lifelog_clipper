@@ -259,7 +259,7 @@ StepsSummary _aggregateSteps(List<_JstDataPoint> points, DateWindow window) {
     hasValue = true;
   }
 
-  final int? totalSteps = hasValue ? total.round() : 0;
+  final int totalSteps = hasValue ? total.round() : 0;
   return StepsSummary(total: totalSteps);
 }
 

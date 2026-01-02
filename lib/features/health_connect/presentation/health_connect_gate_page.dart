@@ -197,7 +197,7 @@ class _HealthConnectGatePageState extends State<HealthConnectGatePage>
   }
 
   Widget _buildCopyTargetsSection() {
-    return CopyTargetsSection(selectionListenable: _copyTargets);
+    return _CopyTargetsSection(selectionListenable: _copyTargets);
   }
 
   Future<void> _onRetry() async {
@@ -378,7 +378,7 @@ class _HealthConnectGatePageState extends State<HealthConnectGatePage>
     _copyNotificationEntry?.remove();
     _copyNotificationEntry = null;
 
-    final overlay = Overlay.of(context);
+    final overlay = Overlay.maybeOf(context);
     if (overlay == null) {
       return;
     }
@@ -550,16 +550,16 @@ class _CopyTargetsSelection {
   }
 }
 
-class CopyTargetsSection extends StatefulWidget {
-  const CopyTargetsSection({super.key, required this.selectionListenable});
+class _CopyTargetsSection extends StatefulWidget {
+  const _CopyTargetsSection({super.key, required this.selectionListenable});
 
   final ValueNotifier<_CopyTargetsSelection> selectionListenable;
 
   @override
-  State<CopyTargetsSection> createState() => _CopyTargetsSectionState();
+  State<_CopyTargetsSection> createState() => _CopyTargetsSectionState();
 }
 
-class _CopyTargetsSectionState extends State<CopyTargetsSection>
+class _CopyTargetsSectionState extends State<_CopyTargetsSection>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _expandAnimation;
@@ -611,7 +611,7 @@ class _CopyTargetsSectionState extends State<CopyTargetsSection>
       child: Material(
         color: Theme.of(
           context,
-        ).colorScheme.surfaceVariant.withValues(alpha: 0.4),
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
         child: Column(
           children: [
             InkWell(
