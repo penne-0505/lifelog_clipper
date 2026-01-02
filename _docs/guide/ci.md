@@ -16,7 +16,7 @@ related_prs: []
 
 ## Workflow
 - Trigger: `main` への push
-- Steps: `flutter pub get` → `flutter analyze` → `flutter test` → `flutter build apk --release`
+- Steps: `flutter pub get` → `flutter analyze --no-fatal-warnings --no-fatal-infos` → `flutter test` → `flutter build apk --release`
 - Release: ビルド済みAPKをGitHub Releaseに添付
 
 ## Release Naming

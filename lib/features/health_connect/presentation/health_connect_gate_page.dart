@@ -551,7 +551,7 @@ class _CopyTargetsSelection {
 }
 
 class _CopyTargetsSection extends StatefulWidget {
-  const _CopyTargetsSection({super.key, required this.selectionListenable});
+  const _CopyTargetsSection({required this.selectionListenable});
 
   final ValueNotifier<_CopyTargetsSelection> selectionListenable;
 
