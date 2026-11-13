@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:lifelog_clipper/features/auto_export/presentation/export_settings_section.dart';
 import 'package:lifelog_clipper/features/health_connect/application/health_connect_controller.dart';
 import 'package:lifelog_clipper/features/health_connect/domain/health_connect_availability.dart';
 import 'package:lifelog_clipper/features/health_connect/domain/health_connect_status.dart';
@@ -170,8 +171,12 @@ class _HealthConnectGatePageState extends State<HealthConnectGatePage>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
               child: RepaintBoundary(child: _buildCopyTargetsSection()),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: RepaintBoundary(child: ExportSettingsSection()),
             ),
             const Divider(height: 1),
             Expanded(child: RepaintBoundary(child: _buildLogList(status))),
