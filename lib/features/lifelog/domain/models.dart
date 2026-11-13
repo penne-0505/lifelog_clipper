@@ -46,6 +46,23 @@ class HeartRateSummary {
   }
 }
 
+class HeartRateSample {
+  const HeartRateSample({
+    required this.time,
+    required this.bpm,
+  });
+
+  final DateTime time;
+  final int bpm;
+
+  Map<String, Object?> toJson() {
+    return LinkedHashMap.of({
+      'time': formatJstDateTime(time),
+      'bpm': bpm,
+    });
+  }
+}
+
 class SleepSummary {
   const SleepSummary({
     required this.totalMinutesSessionBasis,
@@ -116,6 +133,8 @@ class DailyLogJson {
     required this.availability,
     required this.steps,
     required this.heartRate,
+    required this.heartRateSamples,
+    required this.heartRateSamplesTotal,
     required this.sleepSummary,
     required this.sleepSessions,
   });
@@ -126,12 +145,21 @@ class DailyLogJson {
   final HealthConnectAvailability availability;
   final StepsSummary steps;
   final HeartRateSummary heartRate;
+
+  /// Timestamped heart rate points for the day, evenly thinned when the
+  /// raw count exceeds the export cap. Null when data is unavailable.
+  final List<HeartRateSample>? heartRateSamples;
+
+  /// Raw heart rate point count for the day, before thinning.
+  /// Null when data is unavailable.
+  final int? heartRateSamplesTotal;
   final SleepSummary sleepSummary;
   final List<SleepSession>? sleepSessions;
 
   Map<String, Object?> toJson({
     bool includeSteps = true,
     bool includeHeartRate = true,
+    bool includeHeartRateSamples = true,
     bool includeSleepSummary = true,
     bool includeSleepSessions = true,
   }) {
@@ -153,6 +181,11 @@ class DailyLogJson {
       }),
       'steps': includeSteps ? steps.toJson() : null,
       'heart_rate': includeHeartRate ? heartRate.toJson() : null,
+      'heart_rate_samples': includeHeartRateSamples
+          ? heartRateSamples?.map((s) => s.toJson()).toList()
+          : null,
+      'heart_rate_samples_total':
+          includeHeartRateSamples ? heartRateSamplesTotal : null,
       'sleep_summary': includeSleepSummary ? sleepSummary.toJson() : null,
       'sleep_sessions': includeSleepSessions
           ? sleepSessions?.map((s) => s.toJson()).toList()
@@ -163,6 +196,7 @@ class DailyLogJson {
   String toPrettyJson({
     bool includeSteps = true,
     bool includeHeartRate = true,
+    bool includeHeartRateSamples = true,
     bool includeSleepSummary = true,
     bool includeSleepSessions = true,
   }) {
@@ -170,6 +204,7 @@ class DailyLogJson {
       toJson(
         includeSteps: includeSteps,
         includeHeartRate: includeHeartRate,
+        includeHeartRateSamples: includeHeartRateSamples,
         includeSleepSummary: includeSleepSummary,
         includeSleepSessions: includeSleepSessions,
       ),

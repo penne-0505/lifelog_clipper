@@ -102,6 +102,8 @@ class LifeLogAggregator {
         maxBpm: null,
         samplesCount: null,
       ),
+      heartRateSamples: null,
+      heartRateSamplesTotal: null,
       sleepSummary: _nullSleepSummary(),
       sleepSessions: null,
     );
@@ -124,6 +126,8 @@ class LifeLogAggregator {
         maxBpm: null,
         samplesCount: null,
       ),
+      heartRateSamples: null,
+      heartRateSamplesTotal: null,
       sleepSummary: _nullSleepSummary(),
       sleepSessions: null,
     );
@@ -139,7 +143,8 @@ class LifeLogAggregator {
     required List<_JstDataPoint> stagePoints,
   }) {
     final StepsSummary steps = _aggregateSteps(stepPoints, window);
-    final HeartRateSummary heartRate = _aggregateHeartRate(heartPoints, window);
+    final _HeartRateAggregationResult heartAggregation =
+        _aggregateHeartRateData(heartPoints, window);
     final _SleepAggregationResult sleepAggregation = _aggregateSleep(
       sessionPoints,
       stagePoints,
@@ -152,7 +157,9 @@ class LifeLogAggregator {
       window: window,
       availability: availability,
       steps: steps,
-      heartRate: heartRate,
+      heartRate: heartAggregation.summary,
+      heartRateSamples: heartAggregation.samples,
+      heartRateSamplesTotal: heartAggregation.totalCount,
       sleepSummary: sleepAggregation.summary,
       sleepSessions: sleepAggregation.sessions,
     );
@@ -263,7 +270,39 @@ StepsSummary _aggregateSteps(List<_JstDataPoint> points, DateWindow window) {
   return StepsSummary(total: totalSteps);
 }
 
-HeartRateSummary _aggregateHeartRate(
+/// Maximum number of timestamped heart rate samples exported per day.
+/// Raw counts above this are thinned evenly; the raw count is still
+/// reported as `heart_rate_samples_total`. At 1,440 the export keeps
+/// roughly one sample per minute even for a fully recorded day.
+const int _maxHeartRateSamplesPerDay = 1440;
+
+class _HeartRateAggregationResult {
+  const _HeartRateAggregationResult({
+    required this.summary,
+    required this.samples,
+    required this.totalCount,
+  });
+
+  final HeartRateSummary summary;
+  final List<HeartRateSample> samples;
+  final int totalCount;
+}
+
+List<HeartRateSample> _thinHeartRateSamples(List<HeartRateSample> sorted) {
+  if (sorted.length <= _maxHeartRateSamplesPerDay) {
+    return sorted;
+  }
+  final int n = sorted.length;
+  final List<HeartRateSample> thinned = [];
+  for (var i = 0; i < _maxHeartRateSamplesPerDay; i++) {
+    final int index =
+        (i * (n - 1) / (_maxHeartRateSamplesPerDay - 1)).round();
+    thinned.add(sorted[index]);
+  }
+  return thinned;
+}
+
+_HeartRateAggregationResult _aggregateHeartRateData(
   List<_JstDataPoint> points,
   DateWindow window,
 ) {
@@ -281,11 +320,15 @@ HeartRateSummary _aggregateHeartRate(
   }
 
   if (samples.isEmpty) {
-    return const HeartRateSummary(
-      minBpm: null,
-      avgBpmTimeWeighted: null,
-      maxBpm: null,
-      samplesCount: null,
+    return const _HeartRateAggregationResult(
+      summary: HeartRateSummary(
+        minBpm: null,
+        avgBpmTimeWeighted: null,
+        maxBpm: null,
+        samplesCount: null,
+      ),
+      samples: <HeartRateSample>[],
+      totalCount: 0,
     );
   }
 
@@ -327,11 +370,24 @@ HeartRateSummary _aggregateHeartRate(
 
   final double avgRounded = double.parse(avg.toStringAsFixed(1));
 
-  return HeartRateSummary(
-    minBpm: minValue.round(),
-    avgBpmTimeWeighted: avgRounded,
-    maxBpm: maxValue.round(),
-    samplesCount: samples.length,
+  final List<HeartRateSample> timestamped = samples
+      .map(
+        (s) => HeartRateSample(
+          time: truncateToSeconds(s.time),
+          bpm: s.value.round(),
+        ),
+      )
+      .toList();
+
+  return _HeartRateAggregationResult(
+    summary: HeartRateSummary(
+      minBpm: minValue.round(),
+      avgBpmTimeWeighted: avgRounded,
+      maxBpm: maxValue.round(),
+      samplesCount: samples.length,
+    ),
+    samples: _thinHeartRateSamples(timestamped),
+    totalCount: samples.length,
   );
 }
 
