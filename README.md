@@ -12,6 +12,10 @@ LLMs or lifelog apps.
 - Connects to Health Connect (Android).
 - Builds recent daily logs (default: last 7 days).
 - Copies JSON to the clipboard.
+- Optional HTTP auto-export: POSTs the aggregated JSON to a user-configured
+  endpoint (header `x-ingest-secret`), manually via "Send now" or periodically
+  every 15 minutes via WorkManager (covers the last 48 hours). Disabled until
+  an endpoint URL is set in the app.
 
 ### Requirements
 - Flutter 3.18.0 (stable) or newer.
@@ -42,7 +46,8 @@ flutter build apk
 
 ### Notes on Data & Privacy
 - The app reads data from Health Connect and generates JSON on demand.
-- It only copies the JSON to the clipboard; it does not upload it.
+- By default it only copies the JSON to the clipboard. Uploading happens only
+  when the user explicitly configures the HTTP auto-export endpoint.
 
 ### Documents
 - Development details: `CONTRIBUTING.md`
@@ -60,6 +65,9 @@ Flutter アプリです。
 - Health Connect（Android）に接続。
 - 直近の日別ログ（既定: 7日分）を生成。
 - JSON をクリップボードへコピー。
+- 任意の HTTP 自動送信：設定した送信先へ集計 JSON を POST（ヘッダ `x-ingest-secret`）。
+  「今すぐ送信」の手動送信と、WorkManager による15分間隔の定期送信（直近48時間分を対象）に対応。
+  送信先URLを設定するまで無効。
 
 ### 前提条件
 - Flutter 3.18.0（stable）以上。
@@ -90,7 +98,8 @@ flutter build apk
 
 ### データ/プライバシーに関する注意
 - Health Connect からデータを取得し、必要に応じてJSONを生成します。
-- JSONはクリップボードにコピーするのみで、アップロードは行いません。
+- 既定ではJSONはクリップボードにコピーするのみです。HTTP自動送信の送信先を
+  ユーザーが明示的に設定した場合に限り、アップロードを行います。
 
 ### ドキュメント
 - 開発向け: `CONTRIBUTING.md`

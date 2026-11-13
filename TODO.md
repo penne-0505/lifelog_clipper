@@ -180,7 +180,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 --- 
 
 ## Inbox
-- 
+- [自動送信] feat/auto-export で HTTP 自動送信を実装済み（手動送信＋WorkManager 定期送信）。残件：実機での定期実行時の Health Connect バックグラウンド読み取り可否の確認（READ_HEALTH_DATA_IN_BACKGROUND の付与フロー含む）、実送信先での疎通確認。
 
 ---
 
